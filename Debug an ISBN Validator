@@ -1,0 +1,83 @@
+def validate_isbn(isbn):
+    total = 0
+
+    if len(isbn) == 10:
+        for i in range(9):
+            total += int(isbn[i]) * (10 - i)
+
+        check = isbn[9]
+
+        if check == 'X':
+            total += 10
+        else:
+            total += int(check)
+
+        return total % 11 == 0
+
+    elif len(isbn) == 13:
+        for i in range(12):
+            if i % 2 == 0:
+                total += int(isbn[i])
+            else:
+                total += int(isbn[i]) * 3
+
+        check_digit = (10 - (total % 10)) % 10
+
+        return check_digit == int(isbn[12])
+
+    return False
+
+
+def calculate_check_digit_10():
+    pass
+
+
+def calculate_check_digit_13():
+    pass
+
+
+def main():
+    user_input = input('Enter ISBN and length: ')
+
+    if ',' not in user_input:
+        print('Enter comma-separated values.')
+        return
+
+    code, length = user_input.split(',')
+
+    if not length.isdigit():
+        print('Length must be a number.')
+        return
+
+    length = int(length)
+
+    if length not in [10, 13]:
+        print('Length should be 10 or 13.')
+        return
+
+    if length == 10 and len(code) != 10:
+        print('ISBN-10 code should be 10 digits long.')
+        return
+
+    if length == 13 and len(code) != 13:
+        print('ISBN-13 code should be 13 digits long.')
+        return
+
+    if length == 10:
+        if not (code[:-1].isdigit() and
+                (code[-1].isdigit() or code[-1] == 'X')):
+            print('Invalid character was found.')
+            return
+
+    elif length == 13:
+        if not code.isdigit():
+            print('Invalid character was found.')
+            return
+
+    if validate_isbn(code):
+        print('Valid ISBN Code.')
+    else:
+        print('Invalid ISBN Code.')
+
+
+# main()
